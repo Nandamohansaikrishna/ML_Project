@@ -21,6 +21,7 @@ An end-to-end Machine Learning system that predicts credit card default risk, ex
 - --
 
 # # 🏗️ Architecture Pipeline
+
 Raw Data (30K Records)
 ├── 1. EDA & Cleaning (Duplicate removal, categorical remapping)
 ├── 2. Feature Engineering (29 features, outlier capping, SMOTE on train split)
@@ -63,7 +64,12 @@ uvicorn app:app --reload --port 8000
 
 # Terminal 2: Dashboard
 streamlit run streamlit_app.py
-🔌 API ReferenceMethodEndpointDescriptionGET/Health checkGET/model-infoModel metadata and evaluation metricsPOST/predictReturns risk prediction and default probabilityPOST/explainReturns risk prediction, SHAP attributions, and Groq LLM advice📂 Project Structurecredit-risk-scorer/
+🔌 API ReferenceMethodEndpointDescription
+GET/Health check
+GET/model-infoModel metadata and evaluation metrics
+POST/predictReturns risk prediction and default probability
+POST/explainReturns risk prediction, SHAP attributions, and Groq LLM advice
+📂 Project Structurecredit-risk-scorer/
 ├── notebooks/           # Phase 1-4 Jupyter notebooks (EDA to SHAP agent)
 ├── src/                 # Reusable utility scripts and inference pipelines
 ├── models/              # Pickled estimators and fitted transformers
