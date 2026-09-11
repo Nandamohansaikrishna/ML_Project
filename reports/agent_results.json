@@ -1,0 +1,272 @@
+[
+  {
+    "customer_index": 0,
+    "prediction": " NO DEFAULT ",
+    "confidence": "55.1%",
+    "probability": {
+      "no_default": "55.1%",
+      "default": "44.9%"
+    },
+    "actual_label": "NO DEFAULT",
+    "correct": true,
+    "top_factors": [
+      {
+        "feature": "PAY_0",
+        "shap_score": -0.0376,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "total_pay_amt",
+        "shap_score": 0.0309,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "avg_payment_delay",
+        "shap_score": -0.0286,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "debt_to_income_ratio",
+        "shap_score": -0.0252,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "total_bill_amt",
+        "shap_score": 0.0215,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "PAY_2",
+        "shap_score": -0.0183,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "PAY_AMT6",
+        "shap_score": -0.0144,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "LIMIT_BAL",
+        "shap_score": 0.013,
+        "direction": "toward_default"
+      }
+    ],
+    "ai_explanation": "**Why this prediction was made:**\n- The customer’s recent payment behavior (PAY_0 and PAY_2) is very strong – both are at the best possible values, which pulls the default risk down.  \n- Their debt‑to‑income ratio and average payment delay are low, showing they can manage existing debt and pay on time, further reducing risk.  \n- Although the total amount billed and the overall credit limit are slightly high (which nudges risk up), the positive payment and debt‑management signals outweigh those negatives, leading the model to predict “No Default” with modest confidence.\n\n**Actions the customer can take:**\n1. **Pay down the balance on the credit line** – reducing the total amount owed (total_bill_amt) and credit utilization will lower the risk‑increasing impact of a high LIMIT_BAL.  \n2. **Keep up on on‑time payments and aim to shorten any payment delays** – maintaining the excellent PAY_0/PAY_2 record and further reducing avg_payment_delay will reinforce the low‑risk signals."
+  },
+  {
+    "customer_index": 5,
+    "prediction": " DEFAULT RISK ",
+    "confidence": "92.6%",
+    "probability": {
+      "no_default": "7.4%",
+      "default": "92.6%"
+    },
+    "actual_label": "DEFAULT",
+    "correct": true,
+    "top_factors": [
+      {
+        "feature": "avg_payment_delay",
+        "shap_score": 0.1193,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "PAY_0",
+        "shap_score": 0.1041,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "PAY_2",
+        "shap_score": 0.0603,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "PAY_3",
+        "shap_score": 0.037,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "PAY_4",
+        "shap_score": 0.0311,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "PAY_5",
+        "shap_score": 0.0299,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "PAY_6",
+        "shap_score": 0.0137,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "total_pay_amt",
+        "shap_score": 0.0099,
+        "direction": "toward_default"
+      }
+    ],
+    "ai_explanation": "**Why this prediction was made:**\n- The customer’s average payment delay is high (2.22 months) and recent payments are late (PAY_0 = 2, PAY_2 = 2), which the model flags as medium‑impact risk factors.  \n- A series of late‑payment codes from PAY_3 through PAY_6 show a consistent pattern of delinquencies, adding additional (though lower) risk.  \n- Credit utilization is elevated (negative credit_utilization_rate) and the available limit balance is low, further stressing the account and driving the model’s 92.6 % confidence in default risk.  \n\n**Actions the customer can take:**\n1. Set up automatic or scheduled payments to eliminate payment delays and bring all PAY_0‑PAY_6 values to zero.  \n2. Pay down the outstanding balance to reduce credit utilization to below 30 % of the credit limit."
+  },
+  {
+    "customer_index": 10,
+    "prediction": " NO DEFAULT ",
+    "confidence": "72.2%",
+    "probability": {
+      "no_default": "72.2%",
+      "default": "27.8%"
+    },
+    "actual_label": "NO DEFAULT",
+    "correct": true,
+    "top_factors": [
+      {
+        "feature": "PAY_0",
+        "shap_score": -0.0549,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "avg_payment_delay",
+        "shap_score": -0.0442,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "PAY_2",
+        "shap_score": -0.0219,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "PAY_AMT6",
+        "shap_score": -0.0193,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "BILL_AMT6",
+        "shap_score": -0.0192,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "BILL_AMT1",
+        "shap_score": -0.0159,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "total_bill_amt",
+        "shap_score": -0.015,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "PAY_AMT5",
+        "shap_score": -0.0133,
+        "direction": "away_from_default"
+      }
+    ],
+    "ai_explanation": "**Why this prediction was made:**\n- Recent payments are on time (PAY_0 = 0, PAY_2 = 0), which the model sees as a strong sign of low default risk.  \n- The average payment delay is very low (0.1844), further lowering the risk.  \n- Several bill and payment amounts (e.g., PAY_AMT6, BILL_AMT6, total_bill_amt) have small negative SHAP values, meaning they also push the prediction toward “no default,” outweighing the high credit‑utilization rate.\n\n**Actions the customer can take:**\n1. Reduce the credit‑utilization rate (currently 0.8466) by paying down balances or requesting a higher credit limit.  \n2. Continue making all payments on time and avoid any new late payments to keep the low‑risk profile."
+  },
+  {
+    "customer_index": 25,
+    "prediction": " NO DEFAULT ",
+    "confidence": "78.7%",
+    "probability": {
+      "no_default": "78.7%",
+      "default": "21.3%"
+    },
+    "actual_label": "NO DEFAULT",
+    "correct": true,
+    "top_factors": [
+      {
+        "feature": "PAY_0",
+        "shap_score": -0.0504,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "avg_payment_delay",
+        "shap_score": -0.0478,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "PAY_AMT2",
+        "shap_score": -0.0427,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "total_pay_amt",
+        "shap_score": -0.0359,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "debt_to_income_ratio",
+        "shap_score": -0.0174,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "PAY_2",
+        "shap_score": -0.0166,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "MARRIAGE",
+        "shap_score": -0.0161,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "LIMIT_BAL",
+        "shap_score": 0.0139,
+        "direction": "toward_default"
+      }
+    ],
+    "ai_explanation": "**Why this prediction was made:**\n- The customer has a clean recent payment record (PAY_0 = 0, PAY_2 = 0), which strongly lowers default risk.  \n- Their average payment delay is very low and they consistently pay amounts (PAY_AMT2, total_pay_amt), further reducing risk.  \n- Although the credit limit (LIMIT_BAL) slightly pushes risk up, the overall debt‑to‑income ratio and other low‑impact factors keep the risk low, leading to a “NO DEFAULT” prediction with 78.7% confidence.\n\n**Actions the customer can take:**\n1. Lower the credit utilization rate (currently ≈ 68%) by paying down balances or requesting a higher credit limit to bring utilization below 30%.  \n2. Keep making all payments on time and, if possible, pay a little extra each month to further reduce outstanding balances and maintain the strong payment history."
+  },
+  {
+    "customer_index": 50,
+    "prediction": " NO DEFAULT ",
+    "confidence": "80.6%",
+    "probability": {
+      "no_default": "80.6%",
+      "default": "19.4%"
+    },
+    "actual_label": "NO DEFAULT",
+    "correct": true,
+    "top_factors": [
+      {
+        "feature": "PAY_0",
+        "shap_score": -0.0553,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "avg_payment_delay",
+        "shap_score": -0.0549,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "total_pay_amt",
+        "shap_score": -0.031,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "PAY_AMT1",
+        "shap_score": -0.0268,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "credit_utilization_rate",
+        "shap_score": -0.0209,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "PAY_2",
+        "shap_score": -0.0171,
+        "direction": "away_from_default"
+      },
+      {
+        "feature": "MARRIAGE",
+        "shap_score": 0.0163,
+        "direction": "toward_default"
+      },
+      {
+        "feature": "total_bill_amt",
+        "shap_score": -0.0154,
+        "direction": "away_from_default"
+      }
+    ],
+    "ai_explanation": "**Why this prediction was made:**\n- The customer’s recent payment record is strong (PAY_0 = –1.0), which the model sees as a medium‑impact factor that lowers default risk.  \n- Their average payment delay is very small (0.0146) and credit utilization is low (12.6%), both of which further reduce the likelihood of default.  \n- Although the marital status variable slightly raises risk, the overall positive signals (on‑time payments, low utilization, and low delays) outweigh this, leading to a “NO DEFAULT” prediction with 80.6% confidence.\n\n**Actions the customer can take:**\n1. Keep paying all bills on time (or earlier) to maintain the low payment‑delay and strong PAY_0 score.  \n2. Continue to use only a small portion of the available credit limit, keeping the credit utilization rate below 20% to reinforce the low‑risk profile."
+  }
+]

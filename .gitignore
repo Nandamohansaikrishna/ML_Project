@@ -1,0 +1,33 @@
+# Virtual Environment
+credit_risk_env/
+venv/
+
+# API Keys — NEVER push this
+.env
+
+# Large model files
+models/*.pkl
+
+# Large data files
+data/*.csv
+data/*.xls
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# MLflow
+mlruns/
+
+# Temp files
+retrain_save.py
+test.py
+test_app.py
+
+# OS files
+.DS_Store
+Thumbs.db
