@@ -5,13 +5,6 @@ venv/
 # API Keys — NEVER push this
 .env
 
-# Large model files
-models/*.pkl
-
-# Large data files
-data/*.csv
-data/*.xls
-
 # Python cache
 __pycache__/
 *.pyc
