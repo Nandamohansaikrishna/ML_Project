@@ -7,16 +7,36 @@ import os
 from dotenv import load_dotenv
 from groq import Groq
 
-load_dotenv(".env")
-
 # ─────────────────────────────────────────────
-# PAGE CONFIG
+# PAGE CONFIG (MUST BE THE VERY FIRST STREAMLIT COMMAND)
 # ─────────────────────────────────────────────
 st.set_page_config(
     page_title="Credit Risk Scorer",
     page_icon="💳",
     layout="wide"
 )
+
+# ─────────────────────────────────────────────
+# CONFIGURATION & CLIENT INITIALIZATION
+# ─────────────────────────────────────────────
+load_dotenv(".env")
+
+# 1. Try local environment variable first (silences local warnings)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+# 2. If not found locally, try Streamlit Cloud secrets
+if not GROQ_API_KEY:
+    try:
+        GROQ_API_KEY = st.secrets.get("GROQ_API_KEY")
+    except Exception:
+        pass
+
+client = None
+if GROQ_API_KEY:
+    try:
+        client = Groq(api_key=GROQ_API_KEY)
+    except Exception as e:
+        client = None
 
 # ─────────────────────────────────────────────
 # SESSION STATE
@@ -208,7 +228,7 @@ div[data-testid="stChatMessage"] {{
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# DATA LOADING — Graceful fallbacks
+# DATA LOADING
 # ─────────────────────────────────────────────
 @st.cache_data
 def load_data():
@@ -223,8 +243,8 @@ def load_data():
 @st.cache_resource
 def load_model():
     try:
-        model = joblib.load("models/best_model.pkl")
-        return model, None
+        loaded = joblib.load("models/best_model.pkl")
+        return loaded, None
     except Exception as e:
         return None, str(e)
 
@@ -234,21 +254,9 @@ model, model_err = load_model()
 # ─────────────────────────────────────────────
 # EDUCATION & MARRIAGE MAPS
 # ─────────────────────────────────────────────
-EDU_MAP = {
-    0: "Graduate",
-    1: "University",
-    2: "High School",
-    3: "Others"
-}
-MAR_MAP = {
-    0: "Married",
-    1: "Single",
-    2: "Others"
-}
-SEX_MAP = {
-    0: "Female",
-    1: "Male"
-}
+EDU_MAP = {0: "Graduate", 1: "University", 2: "High School", 3: "Others"}
+MAR_MAP = {0: "Married", 1: "Single", 2: "Others"}
+SEX_MAP = {0: "Female", 1: "Male"}
 PAY_MAP = {
     -2: "No consumption",
     -1: "Paid on time",
@@ -273,7 +281,6 @@ def get_risk_badge(prob):
         return "MEDIUM", "badge-medium"
     return "LOW", "badge-low"
 
-
 def predict_customer(idx):
     if model is None or x_test_df is None:
         return 0.5, "MEDIUM", "badge-medium"
@@ -282,21 +289,16 @@ def predict_customer(idx):
     label, badge = get_risk_badge(proba)
     return round(proba, 4), label, badge
 
-
 def get_customer_display(idx):
     if cleaned_df is None or x_test_df is None:
         return {}
-
     offset = len(cleaned_df) - len(x_test_df)
-    row = cleaned_df.iloc[offset + idx]
-    return row
-
+    return cleaned_df.iloc[offset + idx]
 
 def build_groq_context(row, prob, risk_label):
     edu = EDU_MAP.get(int(row.get("EDUCATION", 0)), "Unknown")
     mar = MAR_MAP.get(int(row.get("MARRIAGE", 0)), "Unknown")
     sex = SEX_MAP.get(int(row.get("SEX", 0)), "Unknown")
-
     pay_sep = PAY_MAP.get(int(row.get("PAY_0", -1)), "Unknown")
 
     limit = row.get("LIMIT_BAL", 0)
@@ -348,7 +350,7 @@ def benchmark_chart(row):
     labels = ["Utilization %", "Pay Ratio %", "Delay Score"]
 
     colors_cust = []
-    for i, (cv, sv) in enumerate(zip(customer_vals, safe_targets)):
+    for i, cv in enumerate(customer_vals):
         if i == 0:
             colors_cust.append(C["red"] if cv > 50 else C["green"])
         elif i == 1:
@@ -356,11 +358,9 @@ def benchmark_chart(row):
         else:
             colors_cust.append(C["red"] if cv > 0 else C["green"])
 
-    # Convert hex or dark/light muted color safely for Plotly
     safe_bar_color = "rgba(139, 148, 158, 0.35)" if st.session_state.dark else "rgba(101, 109, 118, 0.35)"
 
     fig = go.Figure()
-
     fig.add_trace(go.Bar(
         name="Your Customer",
         x=labels,
@@ -397,18 +397,10 @@ def benchmark_chart(row):
             x=1,
             font=dict(size=11, color=C["text"])
         ),
-        xaxis=dict(
-            showgrid=False,
-            tickfont=dict(color=C["text"], size=11)
-        ),
-        yaxis=dict(
-            showgrid=True,
-            gridcolor=C["border"],
-            tickfont=dict(color=C["muted"], size=10)
-        )
+        xaxis=dict(showgrid=False, tickfont=dict(color=C["text"], size=11)),
+        yaxis=dict(showgrid=True, gridcolor=C["border"], tickfont=dict(color=C["muted"], size=10))
     )
     return fig
-
 
 def probability_donut(prob):
     fig = go.Figure(go.Pie(
@@ -451,7 +443,6 @@ def probability_donut(prob):
 # SIDEBAR
 # ─────────────────────────────────────────────
 with st.sidebar:
-
     st.markdown(f"""
     <div style='padding: 12px 0 8px;'>
         <div style='font-size:0.72rem; font-weight:700;
@@ -537,7 +528,7 @@ with st.sidebar:
             """, unsafe_allow_html=True)
 
     else:
-        st.error(f"Data load error: {data_err}")
+        st.error(f"Data load error: {data_err or model_err}")
         row = {}
         prob = 0.5
         risk_label = "UNKNOWN"
@@ -557,7 +548,6 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-
 # ─────────────────────────────────────────────
 # MAIN HEADER
 # ─────────────────────────────────────────────
@@ -573,7 +563,6 @@ st.markdown(f"""
     </p>
 </div>
 """, unsafe_allow_html=True)
-
 
 # ─────────────────────────────────────────────
 # TOP METRIC STRIP — 4 Cards
@@ -644,8 +633,6 @@ if row is not None and len(row) > 0:
     # LEFT COLUMN
     # ─────────────────────────────
     with left_col:
-
-        # Customer Profile Card
         st.markdown(f"""
         <div class='section-card'>
             <div class='section-title'>👤 Customer Profile</div>
@@ -676,11 +663,11 @@ if row is not None and len(row) > 0:
             ("Payment Status (Aug)", pay_aug),
         ]
 
-        for label, value in profile_rows:
+        for label, val in profile_rows:
             st.markdown(f"""
             <div class='detail-row'>
                 <span class='detail-label'>{label}</span>
-                <span class='detail-value'>{value}</span>
+                <span class='detail-value'>{val}</span>
             </div>
             """, unsafe_allow_html=True)
 
@@ -726,18 +713,9 @@ if row is not None and len(row) > 0:
         """, unsafe_allow_html=True)
 
         targets = [
-            ("Credit Utilization",
-            f"Currently {util}%",
-            "Keep below 30%",
-            util > 30),
-            ("Payment Ratio",
-            f"Currently {pr:.0f}%",
-            "Pay at least 50% of bill",
-            pr < 50),
-            ("Payment Delays",
-            f"Latest: {pay_sep}",
-            "Always pay on time",
-            "late" in pay_sep.lower()),
+            ("Credit Utilization", f"Currently {util}%", "Keep below 30%", util > 30),
+            ("Payment Ratio", f"Currently {pr:.0f}%", "Pay at least 50% of bill", pr < 50),
+            ("Payment Delays", f"Latest: {pay_sep}", "Always pay on time", "late" in pay_sep.lower()),
         ]
 
         for title, current, goal, is_bad in targets:
@@ -762,7 +740,6 @@ if row is not None and len(row) > 0:
     # RIGHT COLUMN — CHAT
     # ─────────────────────────────
     with right_col:
-
         st.markdown(f"""
         <div class='section-card'>
             <div class='section-title'>💬 AI Loan Advisor</div>
@@ -793,9 +770,7 @@ if row is not None and len(row) > 0:
         st.markdown("</div>", unsafe_allow_html=True)
 
         # Chat input
-        user_input = st.chat_input(
-            f"Ask about Customer #{cust_id:04d}..."
-        )
+        user_input = st.chat_input(f"Ask about Customer #{cust_id:04d}...")
 
         if user_input:
             st.session_state.chat_history.append({
@@ -803,20 +778,13 @@ if row is not None and len(row) > 0:
                 "content": user_input
             })
 
-            GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-            if not GROQ_API_KEY:
-                reply = "Groq API key not found. Add GROQ_API_KEY to your .env file."
+            if not client:
+                reply = "Groq client is not initialized. Please verify your GROQ_API_KEY is configured in Streamlit Secrets or .env file."
             else:
                 try:
-                    client = Groq(api_key=GROQ_API_KEY)
-
                     messages = [
-                        {
-                            "role": "system",
-                            "content": groq_context
-                        }
+                        {"role": "system", "content": groq_context}
                     ]
-
                     for m in st.session_state.chat_history[-8:]:
                         messages.append({
                             "role": m["role"],
@@ -824,11 +792,11 @@ if row is not None and len(row) > 0:
                         })
 
                     response = client.chat.completions.create(
-                        model="groq/compound",
-                        messages=messages,
-                        temperature=0.4,
-                        max_tokens=400
-                    )
+    model="openai/gpt-oss-120b", 
+    messages=messages,
+    temperature=0.4,
+    max_tokens=400
+)
                     reply = response.choices[0].message.content
 
                 except Exception as e:
