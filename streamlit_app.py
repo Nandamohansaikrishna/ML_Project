@@ -15,6 +15,24 @@ st.set_page_config(
     page_icon="💳",
     layout="wide"
 )
+st.markdown("""
+    <style>
+        .main-title {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: -10px;
+            margin-bottom: 5px;
+        }
+        .sub-text {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+    <div class="main-title">💳 Credit Risk Scorer & AI Advisor</div>
+    <div class="sub-text">Select a customer from the sidebar to analyze their credit risk profile.</div>
+""", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # CONFIGURATION & CLIENT INITIALIZATION
